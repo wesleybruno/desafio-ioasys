@@ -42,8 +42,8 @@ class EnterpriseController extends BaseController {
             },
             schema: {
                 query: {
-                    enterprise_types: Joi.string().required(),
-                    name: Joi.string().required()
+                    enterprise_types: Joi.string(),
+                    name: Joi.string()
                 }
             },
             fn: async (req, resp) => {
@@ -53,7 +53,7 @@ class EnterpriseController extends BaseController {
                     const {
                         enterprise_types,
                         name
-                    } = req.params
+                    } = req.query
 
                     const result = await command.getFilter(enterprise_types, name);
 

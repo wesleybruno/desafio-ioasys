@@ -1,18 +1,25 @@
-const mysql = require("./../data/mysql")
+const Mysql = require("./../data/mysql")
 const BaseCommand = require('./BaseCommand');
 
 class UsuarioCommand extends BaseCommand {
 
     constructor() {
         super();
+        const mysql = new Mysql();
+        this.knexConn = mysql.connect();
     }
 
     signIn(email, password) {
         try {
 
-            mysql.executeQuery(`SELECT * FROM user WHERE email = "${email}" and password = "${password}"`, result => {
-                return result;
-            })
+            const query = {
+                email, 
+                password
+            }
+
+            const usuario = this.knexConn.where(query).select().table('user')
+            
+            return usuario
             
         } catch (ex) {
             return this.handleException(ex)

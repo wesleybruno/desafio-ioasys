@@ -11,12 +11,12 @@ class EnterpriseRouter {
 
         router.get(`/`,
             validate(enterpriseController.getFilter.schema),
-            // auth(enterpriseController.getFilter.auth),
+            auth(enterpriseController.getFilter.auth),
             enterpriseController.getFilter.fn);
         
         router.get(`/:id`,
             validate(enterpriseController.getById.schema),
-            // auth(enterpriseController.getById.auth),
+            auth(enterpriseController.getById.auth),
             enterpriseController.getById.fn);
 
         //#endregion

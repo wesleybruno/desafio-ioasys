@@ -12,7 +12,7 @@ class UserRouter {
         const router = express.Router();
         const controller = new UserController();
 
-        router.get(`/auth/sign_in`,
+        router.post(`/auth/sign_in`,
             // validate(controller.signIn.schema),
             // auth(controller.signIn.auth),
             controller.signIn.fn);

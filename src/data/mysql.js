@@ -1,48 +1,29 @@
 const mysql = require('mysql');
+var knex = require('knex');
+
+
 
 class Mysql {
 
-    async connect() {
+    connect() {
         try {
-            const connection = mysql.createConnection({
-                host: process.env.MY_SQL_HOST,
-                port: process.env.MY_SQL_PORT,
-                user: process.env.MY_SQL_USER,
-                password: process.env.MY_SQL_PASSWORD,
-                database: process.env.MY_SQL_DATABASE
-            })
+            const connection  = knex({
+            client: 'mysql',
+            connection: {
+                host : process.env.MY_SQL_HOST,
+                user : process.env.MY_SQL_USER,
+                password : process.env.MY_SQL_PASSWORD,
+                database : process.env.MY_SQL_DATABASE
+            },
+            pool: { min: 0, max: 20 }
+            });
+
             return connection
+
         } catch (ex) {
             console.error(ex.toString())
             throw ex
 
-        }
-    }
-
-    static async executeQuery(sqlQry, cb) {
-
-        const mysql = new Mysql()
-
-        const connection = await mysql.connect();
-
-        connection.query(sqlQry, (error, results, fields) => {
-            if (error)
-                console.error(error);
-            else {
-                console.log('executou!');
-                connection.end();  
-                cb(JSON.stringify(results))
-                //return results
-            }
-        });
-
-    }
-
-    static closeConnection(conn) {
-        try {
-            conn.close();
-        } catch (ex) {
-            console.error(ex.toString())
         }
     }
 }

@@ -22,48 +22,26 @@ const AuthMiddleware = (authConfig) => {
         try {
             if (!roles) return next();
             if (roles.length == 0) return next();
-
+            
             const {
-                authorization
+                client,
+                uid
             } = req.headers;
 
-            if (!authorization) {
+            const accessToken = req.headers["access-token"];
+
+            if (!client ||
+                !accessToken ||
+                !uid) {
                 return resp
                     .status(UNAUTHORIZED.code)
                     .send(UNAUTHORIZED.json);
             }
 
-            const token = authorization.split(' ')[1]
+            next()
 
-            if (!authorization.match(/Bearer /)) {
-                sentryPayload.message = 'AuthMiddleware Step 2'
-                Sentry.captureEvent(sentryPayload);
-
-                return resp
-                    .status(UNAUTHORIZED.code)
-                    .send(UNAUTHORIZED.json);
-            }
-
-            const tokenDecoded = Jwt.verify(token, PRIVATE_KEY);
-
-
-            if (!roles.includes(tokenDecoded.type)) {
-                return resp
-                    .status(FORBIDDEN.code)
-                    .send(FORBIDDEN.json);
-            }
-
+            
         } catch (ex) {
-
-            if (
-                ex.name == 'TokenExpiredError' ||
-                ex.name == 'JsonWebTokenError'
-            ) {
-                return resp
-                    .status(UNAUTHORIZED.code)
-                    .send(UNAUTHORIZED.json);
-            }
-
             return resp.status(500).send({
                 ex: `${ex.message}\n ${ex.stack}`
             });
