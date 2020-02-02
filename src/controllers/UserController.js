@@ -2,7 +2,6 @@ const UserCommnad = require('../command/UserCommand');
 const BaseController = require('./BaseController');
 const Joi = require('joi')
 
-
 class UserController extends BaseController {
     get signIn() {
         return {
@@ -27,7 +26,7 @@ class UserController extends BaseController {
                     const result = await command.signIn(email, password);
 
                     if (command.isValid())
-                        return this.Ok(resp, result);
+                        return this.OkWithHeaders(resp, result);
                     else
                         return this.Fail(resp, command.errors);
                 } catch (ex) {

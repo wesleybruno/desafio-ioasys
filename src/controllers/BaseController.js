@@ -11,6 +11,16 @@ class BaseController {
         })
     }
 
+    OkWithHeaders(resp, data) {
+        resp.setHeader("access-token", data.email);
+        resp.setHeader("client", data.email);
+        resp.setHeader("uid", data.id);
+        resp.status(200).send({
+            r: true,
+            data: data
+        })
+    }
+
     Fail(resp, errors) {
         resp.status(200).send({
             r: false,

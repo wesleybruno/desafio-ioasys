@@ -9,7 +9,7 @@ class UsuarioCommand extends BaseCommand {
         this.knexConn = mysql.connect();
     }
 
-    signIn(email, password) {
+    async signIn(email, password) {
         try {
 
             const query = {
@@ -17,9 +17,8 @@ class UsuarioCommand extends BaseCommand {
                 password
             }
 
-            const usuario = this.knexConn.where(query).select().table('user')
-            
-            return usuario
+            const results = await this.knexConn.where(query).select().table('user')
+            return JSON.parse(JSON.stringify(results))[0]
             
         } catch (ex) {
             return this.handleException(ex)
